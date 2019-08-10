@@ -81,17 +81,60 @@ public class IntList {
      */
 
     public static IntList dcatenate(IntList A, IntList B) {
-        //TODO:  fill in method
-        return null;
+        if(A == null) return B;
+        if(B == null) return A;
+        IntList r = A;
+        while(A.rest != null) {
+            A  = A.rest;
+        }
+        A.rest = B;
+        return r;
     }
+
+    /** Recursive solution */
+//    //TODO:recursive solution of dcatenate()
+//    public static IntList dcatenate(IntList A, IntList B) {
+//        if(A == null) return B;
+//        if(B == null) return A;
+//        return null;
+//    }
 
     /**
      * Returns a list consisting of the elements of A followed by the
      * * elements of B.  May NOT modify items of A.  Use 'new'.
      */
+    //TODO:FIGURE IT OUT !
     public static IntList catenate(IntList A, IntList B) {
-        //TODO:  fill in method
-        return null;
+        if(A == null) return B;
+        if(B == null) return A;
+        IntList a = new IntList(A.first, null);
+        IntList b = new IntList(B.first, null);
+        IntList p = a;
+        A = A.rest;
+        while(A != null) {
+            p.rest = new IntList(A.first, null);
+            p = p.rest;
+            A = A.rest;
+        }
+        p = b;
+        B = B.rest;
+        while(B != null) {
+            p.rest = new IntList(B.first, null);
+            p = p.rest;
+            B = B.rest;
+        }
+        return dcatenate(a,b);
+
+//        //if(A == null) return B;
+//        //if(B == null) return A;
+//        //IntList pa = A;
+//        //IntList pb = B;
+//        IntList r = null;
+//        while(A != null) {
+//            r = new IntList(A.first, r);
+//            A = A.rest;
+//        }
+//        return r;
     }
 
 
