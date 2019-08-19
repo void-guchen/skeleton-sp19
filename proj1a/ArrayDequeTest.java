@@ -6,9 +6,10 @@ public class ArrayDequeTest {
     private static void testGrow() {
         ArrayDeque<Integer> deque = createIntDeque(50);
         deque.printDeque();
-        for(int i = 0; i < deque.capacity(); i++) {
+        for(int i = 0; i < 50; i++) {
             deque.removeFirst();
         }
+        deque.printDeque();
     }
 
     public static void main(String[] args) {
