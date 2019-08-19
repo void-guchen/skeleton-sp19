@@ -1,29 +1,22 @@
-import java.awt.*;
-
 /**
  * @author guchen
  * @date 2019/8/12 - 下午9:41
  */
 @SuppressWarnings("all")
-public class ArrayDeque<T> {
+public class RArrayDeque<T> {
     private static final int DEFAULT_CAPACITY = 8;
     private static final int GROW_FACTOR = 2;
     private static final double LEAST_USAGE_FACTOR = 0.25;
     private static final double DEFAULT_USAGE_FACTOR = 0.5;
     private T[] items;
     private int size;
-    // Add these two field to avoid frequently rotating array.
-    private int nextFirst;
-    private int nextLast;
 
-    public ArrayDeque() {
+    public RArrayDeque() {
         items = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
-        nextFirst = 3;
-        nextLast = 4;
     }
 
-    public ArrayDeque(ArrayDeque other) {
+    public RArrayDeque(RArrayDeque other) {
         this();
         for(int i = 0; i < other.size; i++) {
             addLast( (T) other.get(i));
@@ -31,34 +24,26 @@ public class ArrayDeque<T> {
     }
 
     private void grow(int capacity) {
-        boolean flag = capacity > items.length ? true : false;
         T[] newItems = (T[]) new Object[capacity];
-        int l = (capacity - size) / 2;
-        int left = l;
-        int right = l + size - 1;
-        int index = (nextFirst + 1) % items.length;
-        for(int i = left; i <= right; i++) {
-            newItems[i] = items[index];
-            index = (index + 1) % items.length;
-        }
+        System.arraycopy(items, 0, newItems, 0, size);
         items = newItems;
-        nextFirst = left - 1;
-        nextLast = right + 1;
-        System.out.println("*************** " + ((flag == true) ? "grow" : "narrow") + " to " + capacity + " *************");
+        System.out.println("*************** grow to " + capacity + " *************");
     }
 
     private void ensureUsageFactor() {
         if(items.length < 16) return;
         double usageFactor = usageFactor();
-        //System.out.println("current usagefactor : " + usageFactor);
         if (usageFactor < LEAST_USAGE_FACTOR) {
-            int capacity = (int) (size / DEFAULT_USAGE_FACTOR);
-            grow(capacity);
+            int newLen = (int) (size / DEFAULT_USAGE_FACTOR);
+            T[] newItems = (T[]) new Object[newLen];
+            System.arraycopy(items, 0, newItems, 0, size);
+            items = newItems;
+            System.out.println("************** shrink to " + newLen + " ****************");
         }
     }
 
     private void ensureCapacity() {
-        if(size == capacity()) {
+        if(size == items.length) {
             grow(size * GROW_FACTOR);
         }
     }
@@ -68,9 +53,10 @@ public class ArrayDeque<T> {
      */
     public void addFirst(T item) {
         ensureCapacity();
-        items[nextFirst] = item;
-        int capacity = capacity();
-        nextFirst = (nextFirst - 1 + capacity) % capacity;
+        for(int i = size - 1; i >= 0; i--) {
+            items[i + 1] = items[i];
+        }
+        items[0] = item;
         size += 1;
     }
 
@@ -79,9 +65,7 @@ public class ArrayDeque<T> {
      */
     public void addLast(T item) {
         ensureCapacity();
-        items[nextLast] = item;
-        int capacity = capacity();
-        nextLast = (nextLast + 1) % capacity;
+        items[size] = item;
         size += 1;
     }
 
@@ -108,16 +92,13 @@ public class ArrayDeque<T> {
         usageFactor = (double) Math.round(usageFactor * 100) / 100;
         return usageFactor;
     }
-
     /**
      * Prints the items in the deque from first to last, separated by a space. Once all the items have been printed, print out a new line.
      */
     public void printDeque() {
         StringBuilder builder = new StringBuilder();
-        int front = (nextFirst + 1) % items.length;
         for(int i = 0; i < size; i++) {
-            int index = (front + i) % items.length;
-            builder.append(items[index]);
+            builder.append(items[i]);
             builder.append(" ");
         }
         System.out.println(builder);
@@ -127,10 +108,11 @@ public class ArrayDeque<T> {
      * Removes and returns the item at the front of the deque. If no such item exists, returns null.
      */
     public T removeFirst() {
-        int firIndex = (nextFirst + 1) % items.length;
-        T first = items[firIndex];
-        items[firIndex] = null;
-        nextFirst = firIndex;
+        T first = get(0);
+        for(int i = 1; i < size; i++) {
+            items[i-1] = items[i];
+        }
+        items[size - 1] = null;
         size -= 1;
         ensureUsageFactor();
         return first;
@@ -140,10 +122,8 @@ public class ArrayDeque<T> {
      * Removes and returns the item at the back of the deque. If no such item exists, returns null.
      */
     public T removeLast() {
-        int lastIndex = (nextLast - 1 + items.length) % items.length;
-        T last = items[lastIndex];
-        items[lastIndex] = null;
-        nextLast = lastIndex;
+        T last = get(size - 1);
+        items[size - 1] = null;
         size -= 1;
         ensureUsageFactor();
         return last;
@@ -154,9 +134,6 @@ public class ArrayDeque<T> {
      */
     public T get(int index) {
         if(index < 0 || index > size -1) return null;
-        int firIndex = (nextFirst + 1) % items.length;
-        int realIndex = (firIndex + index) % items.length;
-        return items[realIndex];
+        return items[index];
     }
-
 }
