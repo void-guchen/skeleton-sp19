@@ -1,5 +1,3 @@
-import java.awt.*;
-
 /**
  * @author guchen
  * @date 2019/8/12 - 下午9:41
@@ -25,8 +23,8 @@ public class ArrayDeque<T> {
 
     public ArrayDeque(ArrayDeque other) {
         this();
-        for(int i = 0; i < other.size; i++) {
-            addLast( (T) other.get(i));
+        for (int i = 0; i < other.size; i++) {
+            addLast((T) other.get(i));
         }
     }
 
@@ -37,18 +35,21 @@ public class ArrayDeque<T> {
         int left = l;
         int right = l + size - 1;
         int index = plusOne(nextFirst);
-        for(int i = left; i <= right; i++) {
+        for (int i = left; i <= right; i++) {
             newItems[i] = items[index];
             index = plusOne(index);
         }
         items = newItems;
         nextFirst = left - 1;
         nextLast = right + 1;
-        System.out.println("*************** " + ((flag == true) ? "grow" : "narrow") + " to " + capacity + " *************");
+        String action = flag ? "grow" : "narrow";
+        System.out.println("************ " + action + " to " + capacity + " **********");
     }
 
     private void ensureUsageFactor() {
-        if(items.length < 16) return;
+        if (items.length < 16) {
+            return;
+        }
         double usageFactor = usageFactor();
         //System.out.println("current usagefactor : " + usageFactor);
         if (usageFactor < LEAST_USAGE_FACTOR) {
@@ -58,7 +59,7 @@ public class ArrayDeque<T> {
     }
 
     private void ensureCapacity() {
-        if(size == capacity()) {
+        if (size == capacity()) {
             grow(size * GROW_FACTOR);
         }
     }
@@ -108,11 +109,12 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * Prints the items in the deque from first to last, separated by a space. Once all the items have been printed, print out a new line.
+     * Prints the items in the deque from first to last, separated by a space.
+     * Once all the items have been printed, print out a new line.
      */
     public void printDeque() {
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             builder.append(get(i));
             builder.append(" ");
         }
@@ -123,7 +125,9 @@ public class ArrayDeque<T> {
      * Removes and returns the item at the front of the deque. If no such item exists, returns null.
      */
     public T removeFirst() {
-        if(size == 0) return null;
+        if (isEmpty()) {
+            return null;
+        }
         int firIndex = plusOne(nextFirst);
         T first = items[firIndex];
         items[firIndex] = null;
@@ -137,7 +141,9 @@ public class ArrayDeque<T> {
      * Removes and returns the item at the back of the deque. If no such item exists, returns null.
      */
     public T removeLast() {
-        if(size == 0) return null;
+        if (isEmpty()) {
+            return null;
+        }
         int lastIndex = minusOne(nextLast);
         T last = items[lastIndex];
         items[lastIndex] = null;
@@ -148,10 +154,13 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth. If no such item exists, returns null. Must not alter the deque!
+     * Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth.
+     * If no such item exists, returns null. Must not alter the deque!
      */
     public T get(int index) {
-        if(index < 0 || index > size -1) return null;
+        if (index < 0 || index > size - 1) {
+            return null;
+        }
         int firIndex = plusOne(nextFirst);
         int realIndex = (firIndex + index) % items.length;
         return items[realIndex];

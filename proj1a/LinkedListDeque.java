@@ -1,6 +1,7 @@
 /**
  * Deque (usually pronounced like “deck”) is an irregular acronym of double-ended queue.
- * Double-ended queues are sequence containers with dynamic sizes that can be expanded or contracted on both ends (either its front or its back).
+ * Double-ended queues are sequence containers with dynamic sizes that can be expanded or contracted
+ * on both ends (either its front or its back).
  * @author guchen
  * @date 2019/8/12 - 下午3:59
  */
@@ -25,7 +26,7 @@ public class LinkedListDeque<T> {
     public LinkedListDeque(LinkedListDeque other) {
         this();
         Node p = other.sentinel.next;
-        while(p != sentinel) {
+        while (p != sentinel) {
             addLast(p.item);
         }
     }
@@ -65,12 +66,13 @@ public class LinkedListDeque<T> {
     }
 
     /**
-     * Prints the items in the deque from first to last, separated by a space. Once all the items have been printed, print out a new line.
+     * Prints the items in the deque from first to last, separated by a space.
+     * Once all the items have been printed, print out a new line.
      */
     public void printDeque() {
         StringBuilder builder = new StringBuilder();
-        Node p =sentinel.next;
-        while(p != sentinel) {
+        Node p = sentinel.next;
+        while (p != sentinel) {
             builder.append(p.item);
             builder.append(" ");
             p = p.next;
@@ -82,7 +84,9 @@ public class LinkedListDeque<T> {
      * Removes and returns the item at the front of the deque. If no such item exists, returns null.
      */
     public T removeFirst() {
-        if(isEmpty()) return null;
+        if (isEmpty()) {
+            return null;
+        }
         Node firNode = sentinel.next;
         T firItem = firNode.item;
         firNode.next.pre = firNode.pre;
@@ -96,7 +100,9 @@ public class LinkedListDeque<T> {
      * Removes and returns the item at the back of the deque. If no such item exists, returns null.
      */
     public T removeLast() {
-        if(isEmpty()) return null;
+        if (isEmpty()) {
+            return null;
+        }
         Node lastNode = sentinel.pre;
         T lastItem = lastNode.item;
         lastNode.pre.next = lastNode.next;
@@ -107,13 +113,16 @@ public class LinkedListDeque<T> {
     }
 
     /**
-     * Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth. If no such item exists, returns null. Must not alter the deque!
+     * Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth.
+     * If no such item exists, returns null. Must not alter the deque!
      */
     public T get(int index) {
-        if(index < 0 || index > size-1) return null;
+        if (index < 0 || index > size - 1) {
+            return null;
+        }
         Node p = sentinel;
         int count = 0;
-        while(count <= index) {
+        while (count <= index) {
             p = p.next;
             count += 1;
         }
@@ -128,17 +137,21 @@ public class LinkedListDeque<T> {
     }
 
     private T getFromSub(Node sub, int index) {
-        if(sub == sentinel) return null;
-        if(index == 0) return sub.item;
+        if (sub == sentinel) {
+            return null;
+        }
+        if (index == 0) {
+            return sub.item;
+        }
         return getFromSub(sub.next, index - 1);
     }
 
-    //TODO:figure out access control of nested class
+    //TODO : figure out access control of nested class
     private class Node {
         private T item;
         private Node pre;
         private Node next;
-        private Node() {}
+        private Node() { }
 
         private Node(T item, Node pre, Node next) {
             this.item = item;
