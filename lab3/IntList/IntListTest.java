@@ -73,7 +73,7 @@ public class IntListTest {
         IntList expectList = IntList.of(5, 4, 3, 2, 1);
         IntList reversedList = IntList.reverse(list);
         IntList p1 = expectList;
-        IntList p2 =reversedList;
+        IntList p2 = reversedList;
         while (p1 != null && p2 != null) {
             assertEquals(p1.first, p2.first);
             p1 = p1.rest;

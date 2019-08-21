@@ -1,7 +1,9 @@
+import java.util.Objects;
+
 @SuppressWarnings("all")
 public class IntList {
-    private int first;
-    private IntList rest;
+    public int first;
+    public IntList rest;
     
     public IntList(int first, IntList rest) {
         this.first = first;
@@ -215,6 +217,19 @@ public class IntList {
         return list;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IntList intList = (IntList) o;
+        return first == intList.first &&
+                Objects.equals(rest, intList.rest);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, rest);
+    }
 
     public static IntList dcatenate(IntList a, IntList b) {
         return null;
